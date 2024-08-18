@@ -37,6 +37,7 @@ graalVMNativeImageOptions ++= Seq(
 graalVMNativeImageOptions ++= Seq(
 //  "-H:-EnableSecurityServicesFeature",
 //  "-H:+TraceSecurityServices",
+//  "--enable-https",
   "-H:+ReportExceptionStackTraces",
   "-H:JNIConfigurationFiles=../../src/graal/jni-config.json",
   "-H:ResourceConfigurationFiles=../../src/graal/resource-config.json",

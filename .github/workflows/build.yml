@@ -45,12 +45,12 @@ jobs:
           jvm: graalvm-community:17
           apps: sbt
 
-#      - uses: graalvm/setup-graalvm@v1
-#        with:
-#          java-version: '17'
-#          distribution: 'graalvm'
-#          github-token: ${{ secrets.GITHUB_TOKEN }}
-#          native-image-job-reports: 'true'
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '17'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          native-image-job-reports: 'true'
 
       - name: Build Native Executable
         run: |
