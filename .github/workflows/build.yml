@@ -2,10 +2,14 @@ name: Build Test
 
 on:
   push:
-    branches: [ "gha" ]
+    tags:
+      - "v*.*.*"
 
 permissions:
   contents: read
+
+env:
+  VERSION: ${{　github.ref　}}
 
 jobs:
   build:
@@ -82,3 +86,4 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: fanhuaji-cli-*
+          tag_name: ${{　github.ref　}}
