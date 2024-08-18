@@ -1,0 +1,58 @@
+name: Build Test
+
+on:
+  push:
+    branches: [ "gha" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build assembly jar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '17'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          native-image-job-reports: 'true'
+
+      - name: Build Assembly Jar
+        run: |
+          sbt 'assembly'
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: fanhuaji-cli-assembly.jar
+          path: target/scala-2.13/fanhuaji-cli-assembly*
+
+  build-native:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '17'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          native-image-job-reports: 'true'
+
+      - name: Build Native Executable
+        run: |
+          sbt 'show GraalVMNativeImage/packageBin'
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: fanhuaji-cli-${{ matrix.os }}
+          path: target/graalvm-native-image/fanhuaji-cli
