@@ -39,7 +39,7 @@ jobs:
         os: [macos-latest, windows-latest, ubuntu-latest]
     steps:
       - uses: actions/checkout@v4
-      - uses: coursier/cache-action@v6
+#      - uses: coursier/cache-action@v6
       - uses: coursier/setup-action@v1
         with:
           jvm: graalvm-community:17
