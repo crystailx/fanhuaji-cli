@@ -58,12 +58,13 @@ jobs:
           sbt 'show GraalVMNativeImage/packageBin'
 
       - name: Test Run
+        working-directory: test-files
         run: |
-          target/graalvm-native-image/fanhuaji-cli -v -i test-files/chs.ass -m Taiwan test-files/result.ass
-          diff -I 'Comment: Processed by 繁化姬' test-files/cht.ass test-files/result.ass
+          ../target/graalvm-native-image/fanhuaji-cli -v -i chs.ass -m Taiwan result.ass
+          diff -I 'Comment: Processed by 繁化姬' cht.ass result.ass
 
-#      - name: Upload binary
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: fanhuaji-cli-${{ matrix.os }}
-#          path: target/graalvm-native-image/fanhuaji-cli
+      - name: Upload binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: fanhuaji-cli-${{ matrix.os }}
+          path: target/graalvm-native-image/fanhuaji-cli
