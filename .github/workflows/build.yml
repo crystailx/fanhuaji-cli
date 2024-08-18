@@ -72,8 +72,8 @@ jobs:
         run: |
           diff --strip-trailing-cr -I 'Comment: Processed by 繁化姬' cht.ass result.ass
 
-      - name: Upload binary
-        uses: actions/upload-artifact@v2
-        with:
-          name: fanhuaji-cli-${{ matrix.os }}
-          path: target/graalvm-native-image/fanhuaji-cli
+#      - name: Upload binary
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: fanhuaji-cli-${{ matrix.os }}
+#          path: target/graalvm-native-image/fanhuaji-cli
