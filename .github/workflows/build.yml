@@ -33,6 +33,19 @@ jobs:
           name: fanhuaji-cli-assembly.jar
           path: target/scala-2.13/fanhuaji-cli-assembly*
 
+      - name: Prepare Release
+        shell: bash
+        run: tar -czf fanhuaji-cli-assembly.tar.gz target/scala-2.13/fanhuaji-cli-assembly*
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: fanhuaji-cli-assembly.tar.gz
+          tag_name: ${{　github.ref_name　}}
+          make_latest: true
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+
   build-native:
     name: Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -75,35 +88,13 @@ jobs:
 
       - name: Prepare Release
         shell: bash
-        run: zip fanhuaji-cli-${{ matrix.os }}.zip target/graalvm-native-image/fanhuaji-cli
+        run: tar -czf fanhuaji-cli-${{ matrix.os }}.tar.gz target/graalvm-native-image/fanhuaji-cli
 
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          files: fanhuaji-cli-${{ matrix.os }}.zip
+          files: fanhuaji-cli-${{ matrix.os }}.tar.gz
           tag_name: ${{　github.ref_name　}}
           make_latest: true
           generate_release_notes: true
           fail_on_unmatched_files: true
-
-#  release:
-#    needs: [ build, build-native ]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Wait for artifacts to be accessible
-#        shell: bash
-#        run: sleep 30s
-#
-#      - name: Download binary
-#        uses: actions/download-artifact@v4
-#        with:
-#          pattern: fanhuaji-cli-*
-#
-#      - name: Release
-#        uses: softprops/action-gh-release@v2
-#        with:
-#          files: "fanhuaji-cli-*/*"
-#          tag_name: ${{　github.ref_name　}}
-#          make_latest: true
-#          generate_release_notes: true
-#          fail_on_unmatched_files: true
