@@ -34,6 +34,8 @@ jobs:
   build-native:
     name: Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    env:
+      JAVA_TOOL_OPTIONS: "-Dfile.encoding=UTF-8"
     strategy:
       fail-fast: false
       matrix:
