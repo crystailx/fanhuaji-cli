@@ -58,10 +58,8 @@ jobs:
       - name: Verify encoding
         shell: bash
         run: |
-          chcp 65001
           [System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8
           [System.Console]::InputEncoding = [System.Text.Encoding]::UTF8
-          echo "Current code page: $(chcp)"
           echo "Java file.encoding: $(java -XshowSettings:properties -version | findstr file.encoding)"
 
 
