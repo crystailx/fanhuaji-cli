@@ -19,7 +19,6 @@ jobs:
           java-version: '17'
           distribution: 'graalvm'
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          native-image-job-reports: 'true'
 
       - name: Build Assembly Jar
         run: sbt 'assembly'
@@ -75,7 +74,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download binary
-        uses: actions/upload-artifact@v4
+        uses: actions/download-artifact@v4
         with:
           pattern: fanhuaji-cli-*
 
