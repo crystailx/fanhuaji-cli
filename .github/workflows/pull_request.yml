@@ -1,0 +1,27 @@
+name: Pull Request
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '17'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          native-image-job-reports: 'true'
+      - name: Run tests
+        run: sbt test
+        # Optional: This step uploads information to the GitHub dependency graph and unblocking Dependabot alerts for the repository
+      - name: Upload dependency graph
+        uses: scalacenter/sbt-dependency-submission@1b20fa2fa82906ff3ebb09a29d70cf85aa2ad385
