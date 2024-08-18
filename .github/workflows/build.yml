@@ -10,7 +10,6 @@ permissions:
 
 env:
   VERSION: ${{　github.ref_name　}}
-  BIN_FILE: target/graalvm-native-image/fanhuaji-cli
 
 jobs:
   build:
@@ -65,24 +64,24 @@ jobs:
         working-directory: test-files
         shell: bash
         run: |
-          ../${{ BIN_FILE }} -v -i chs.ass -m Taiwan result.ass
+          ../target/graalvm-native-image/fanhuaji-cli -v -i chs.ass -m Taiwan result.ass
           diff --strip-trailing-cr -I 'Comment: Processed by 繁化姬' cht.ass result.ass
 
       - name: Upload binary
         uses: actions/upload-artifact@v4
         with:
           name: fanhuaji-cli-${{ matrix.os }}
-          path: ${{ BIN_FILE }}
+          path: target/graalvm-native-image/fanhuaji-cli
 
       - name: Prepare Release
         shell: bash
-        run: zip fanhuaji-cli-${{ matrix.os }}.zip ${{ BIN_FILE }}
+        run: zip fanhuaji-cli-${{ matrix.os }}.zip target/graalvm-native-image/fanhuaji-cli
 
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
           files: fanhuaji-cli-${{ matrix.os }}.zip
-          tag_name: ${{ VERSION }}
+          tag_name: ${{　github.ref_name　}}
           make_latest: true
           generate_release_notes: true
           fail_on_unmatched_files: true
@@ -104,7 +103,7 @@ jobs:
 #        uses: softprops/action-gh-release@v2
 #        with:
 #          files: "fanhuaji-cli-*/*"
-#          tag_name: ${{ VERSION }}
+#          tag_name: ${{　github.ref_name　}}
 #          make_latest: true
 #          generate_release_notes: true
 #          fail_on_unmatched_files: true
