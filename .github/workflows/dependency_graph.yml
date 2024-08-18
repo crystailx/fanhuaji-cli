@@ -1,9 +1,7 @@
-name: Pull Request
+name: Dependency Graph
 
 on:
   push:
-    branches: [ "gha" ]
-  pull_request:
     branches: [ "main" ]
 
 permissions:
@@ -22,8 +20,5 @@ jobs:
           distribution: 'graalvm'
           github-token: ${{ secrets.GITHUB_TOKEN }}
           native-image-job-reports: 'true'
-      - name: Run tests
-        run: sbt test
-        # Optional: This step uploads information to the GitHub dependency graph and unblocking Dependabot alerts for the repository
       - name: Upload dependency graph
         uses: scalacenter/sbt-dependency-submission@1b20fa2fa82906ff3ebb09a29d70cf85aa2ad385
