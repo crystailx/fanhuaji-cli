@@ -1,4 +1,4 @@
-ThisBuild / version      := "0.1.0"
+ThisBuild / version      := System.getenv().getOrDefault("VERSION", "0.1.0")
 ThisBuild / organization := "io.github.crystailx"
 ThisBuild / scalaVersion := "2.13.14"
 
@@ -35,10 +35,6 @@ graalVMNativeImageOptions ++= Seq(
 )
 
 graalVMNativeImageOptions ++= Seq(
-//  "-H:-EnableSecurityServicesFeature",
-//  "-H:+TraceSecurityServices",
-//  "--enable-https",
-  "-H:+ReportExceptionStackTraces",
   "-H:JNIConfigurationFiles=../../src/graal/jni-config.json",
   "-H:ResourceConfigurationFiles=../../src/graal/resource-config.json",
   "-H:ReflectionConfigurationFiles=../../src/graal/reflect-config.json",
