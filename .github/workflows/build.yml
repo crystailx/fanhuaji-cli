@@ -58,8 +58,6 @@ jobs:
       - name: Verify encoding
         shell: bash
         run: |
-          [System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-          [System.Console]::InputEncoding = [System.Text.Encoding]::UTF8
           echo "Java file.encoding: $(java -XshowSettings:properties -version | findstr file.encoding)"
 
 
