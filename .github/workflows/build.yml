@@ -68,7 +68,7 @@ jobs:
           diff --strip-trailing-cr -I 'Comment: Processed by 繁化姬' cht.ass result.ass
 
       - name: Upload binary
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: fanhuaji-cli-${{ matrix.os }}
           path: target/graalvm-native-image/fanhuaji-cli
@@ -77,15 +77,19 @@ jobs:
     needs: [ build, build-native ]
     runs-on: ubuntu-latest
     steps:
+      - name: Wait for artifacts to be accessible
+        shell: bash
+        run: sleep 15s
+
       - name: Download binary
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           pattern: fanhuaji-cli-*
 
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          files: fanhuaji-cli-*
-          tag_name: $VERSION
+          files: "**/fanhuaji-cli-*"
+          tag_name: ${VERSION}
           make_latest: true
           generate_release_notes: true
