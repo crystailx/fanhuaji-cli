@@ -43,6 +43,7 @@ jobs:
       - uses: coursier/setup-action@v1
         with:
           jvm: graalvm-community:17
+          apps: sbt
 
 #      - uses: graalvm/setup-graalvm@v1
 #        with:
@@ -53,7 +54,7 @@ jobs:
 
       - name: Build Native Executable
         run: |
-          sbtn 'show GraalVMNativeImage/packageBin'
+          sbt 'show GraalVMNativeImage/packageBin'
 
       - name: Upload binary
         uses: actions/upload-artifact@v2
