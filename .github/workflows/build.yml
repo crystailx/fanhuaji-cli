@@ -59,6 +59,7 @@ jobs:
 
       - name: Test Run
         working-directory: test-files
+        shell: bash
         run: |
           ../target/graalvm-native-image/fanhuaji-cli -v -i chs.ass -m Taiwan result.ass
           diff -I 'Comment: Processed by 繁化姬' cht.ass result.ass
