@@ -39,13 +39,17 @@ jobs:
         os: [macos-latest, windows-latest, ubuntu-latest]
     steps:
       - uses: actions/checkout@v4
-
-      - uses: graalvm/setup-graalvm@v1
+      - uses: coursier/cache-action@v6
+      - uses: coursier/setup-action@v1
         with:
-          java-version: '17'
-          distribution: 'graalvm'
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          native-image-job-reports: 'true'
+          jvm: graalvm-community:17
+
+#      - uses: graalvm/setup-graalvm@v1
+#        with:
+#          java-version: '17'
+#          distribution: 'graalvm'
+#          github-token: ${{ secrets.GITHUB_TOKEN }}
+#          native-image-job-reports: 'true'
 
       - name: Build Native Executable
         run: |
