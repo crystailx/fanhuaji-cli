@@ -64,6 +64,19 @@ jobs:
         shell: bash
         run: |
           ../target/graalvm-native-image/fanhuaji-cli -v -i chs.ass -m Taiwan result.ass
+#          diff -I 'Comment: Processed by 繁化姬' cht.ass result.ass
+
+      - name: Upload result
+        uses: actions/upload-artifact@v2
+        with:
+          name: result-${{ matrix.os }}
+          path: test-files/result.ass
+
+      - name: Diff
+        working-directory: test-files
+        shell: bash
+        run: |
+          ../target/graalvm-native-image/fanhuaji-cli -v -i chs.ass -m Taiwan result.ass
           diff -I 'Comment: Processed by 繁化姬' cht.ass result.ass
 
       - name: Upload binary
