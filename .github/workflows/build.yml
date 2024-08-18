@@ -39,7 +39,7 @@ jobs:
         os: [macos-latest, windows-latest, ubuntu-latest]
     steps:
       - uses: actions/checkout@v4
-#      - uses: coursier/cache-action@v6
+      - uses: coursier/cache-action@v6
       - uses: coursier/setup-action@v1
         with:
           jvm: graalvm-community:17
@@ -55,6 +55,11 @@ jobs:
       - name: Build Native Executable
         run: |
           sbt 'show GraalVMNativeImage/packageBin'
+
+      - name: Test Run
+        run: |
+          target/graalvm-native-image/fanhuaji-cli -v -i test-files/chs.ass -m Taiwan test-files/result.ass
+          diff test-files/cht.ass test-files/result.ass
 
 #      - name: Upload binary
 #        uses: actions/upload-artifact@v2
