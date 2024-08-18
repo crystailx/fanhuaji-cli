@@ -9,16 +9,17 @@ private[config] class CmdArgs(arguments: Seq[String]) extends ScallopConf(argume
   banner("""
       |本程式使用了繁化姬的 API 服務
       |若將繁化姬使用於商用必須付費
-      |https://zhconvert.org/
+      |詳情請參考：https://zhconvert.org/
       |""".stripMargin)
   val input: ScallopOption[String] = opt[String](short = 'i', required = true)
   val mode: ScallopOption[Either[NoSuchMember[Mode], Mode]] = choice(
     Mode.values.map(_.entryName),
     short = 'm',
+    required = true,
     descr = s"所要使用的轉換器:$Mode"
   ).map(Mode.withNameInsensitiveEither)
   val verbose: ScallopOption[Boolean] = toggle(default = Some(false))
-  val output: ScallopOption[String] = trailArg[String]()
+  val output: ScallopOption[String]   = trailArg[String](required = true)
   verify()
 }
 object CmdArgs {
