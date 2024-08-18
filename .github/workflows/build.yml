@@ -53,7 +53,7 @@ jobs:
 
       - name: Build Native Executable
         run: |
-          sbt 'show GraalVMNativeImage/packageBin'
+          sbtn 'show GraalVMNativeImage/packageBin'
 
       - name: Upload binary
         uses: actions/upload-artifact@v2
