@@ -35,6 +35,7 @@ jobs:
     name: Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
     steps:
@@ -59,7 +60,7 @@ jobs:
       - name: Test Run
         run: |
           target/graalvm-native-image/fanhuaji-cli -v -i test-files/chs.ass -m Taiwan test-files/result.ass
-          diff test-files/cht.ass test-files/result.ass
+          diff -I 'Comment: Processed by 繁化姬' test-files/cht.ass test-files/result.ass
 
 #      - name: Upload binary
 #        uses: actions/upload-artifact@v2
