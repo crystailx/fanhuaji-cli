@@ -55,6 +55,16 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           native-image-job-reports: 'true'
 
+      - name: Verify encoding
+        shell: bash
+        run: |
+          chcp 65001
+          [System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+          [System.Console]::InputEncoding = [System.Text.Encoding]::UTF8
+          echo "Current code page: $(chcp)"
+          echo "Java file.encoding: $(java -XshowSettings:properties -version | findstr file.encoding)"
+
+
       - name: Build Native Executable
         run: |
           sbt 'show GraalVMNativeImage/packageBin'
@@ -76,7 +86,6 @@ jobs:
         working-directory: test-files
         shell: bash
         run: |
-          ../target/graalvm-native-image/fanhuaji-cli -v -i chs.ass -m Taiwan result.ass
           diff -I 'Comment: Processed by 繁化姬' cht.ass result.ass
 
       - name: Upload binary
