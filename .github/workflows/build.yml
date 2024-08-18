@@ -10,6 +10,7 @@ permissions:
 
 env:
   VERSION: ${{　github.ref_name　}}
+  BIN_FILE: target/graalvm-native-image/fanhuaji-cli
 
 jobs:
   build:
@@ -64,32 +65,46 @@ jobs:
         working-directory: test-files
         shell: bash
         run: |
-          ../target/graalvm-native-image/fanhuaji-cli -v -i chs.ass -m Taiwan result.ass
+          ../${{ BIN_FILE }} -v -i chs.ass -m Taiwan result.ass
           diff --strip-trailing-cr -I 'Comment: Processed by 繁化姬' cht.ass result.ass
 
       - name: Upload binary
         uses: actions/upload-artifact@v4
         with:
           name: fanhuaji-cli-${{ matrix.os }}
-          path: target/graalvm-native-image/fanhuaji-cli
+          path: ${{ BIN_FILE }}
 
-  release:
-    needs: [ build, build-native ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Wait for artifacts to be accessible
+      - name: Prepare Release
         shell: bash
-        run: sleep 15s
-
-      - name: Download binary
-        uses: actions/download-artifact@v4
-        with:
-          pattern: fanhuaji-cli-*
+        run: zip fanhuaji-cli-${{ matrix.os }}.zip ${{ BIN_FILE }}
 
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          files: "**/fanhuaji-cli-*"
-          tag_name: ${VERSION}
+          files: fanhuaji-cli-${{ matrix.os }}.zip
+          tag_name: ${{ VERSION }}
           make_latest: true
           generate_release_notes: true
+          fail_on_unmatched_files: true
+
+#  release:
+#    needs: [ build, build-native ]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Wait for artifacts to be accessible
+#        shell: bash
+#        run: sleep 30s
+#
+#      - name: Download binary
+#        uses: actions/download-artifact@v4
+#        with:
+#          pattern: fanhuaji-cli-*
+#
+#      - name: Release
+#        uses: softprops/action-gh-release@v2
+#        with:
+#          files: "fanhuaji-cli-*/*"
+#          tag_name: ${{ VERSION }}
+#          make_latest: true
+#          generate_release_notes: true
+#          fail_on_unmatched_files: true
