@@ -1,4 +1,4 @@
-name: Build Test
+name: Release
 
 on:
   push:
@@ -88,7 +88,7 @@ jobs:
 
       - name: Prepare Release
         shell: bash
-        run: tar -czf fanhuaji-cli-${{ matrix.os }}.tar.gz target/graalvm-native-image/fanhuaji-cli
+        run: tar -C target/graalvm-native-image -czf fanhuaji-cli-${{ matrix.os }}.tar.gz fanhuaji-cli
 
       - name: Release
         uses: softprops/action-gh-release@v2

@@ -20,5 +20,15 @@ jobs:
           distribution: 'graalvm'
           github-token: ${{ secrets.GITHUB_TOKEN }}
           native-image-job-reports: 'true'
+
       - name: Run tests
         run: sbt test
+
+      - name: Build Native Executable
+        run: sbt 'show GraalVMNativeImage/packageBin'
+
+      - name: Test Run
+        shell: bash
+        run: |
+          target/graalvm-native-image/fanhuaji-cli -v -i test-files/chs.ass -m Taiwan test-files/result.ass
+          diff --strip-trailing-cr -I 'Comment: Processed by 繁化姬' test-files/cht.ass test-files/result.ass
