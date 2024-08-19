@@ -1,0 +1,100 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+env:
+  VERSION: ${{　github.ref_name　}}
+
+jobs:
+  build:
+    name: Build assembly jar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '17'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Assembly Jar
+        run: sbt 'assembly'
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: fanhuaji-cli-assembly.jar
+          path: target/scala-2.13/fanhuaji-cli-assembly*
+
+      - name: Prepare Release
+        shell: bash
+        run: tar -czf fanhuaji-cli-assembly.tar.gz target/scala-2.13/fanhuaji-cli-assembly*
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: fanhuaji-cli-assembly.tar.gz
+          tag_name: ${{　github.ref_name　}}
+          make_latest: true
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+
+  build-native:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    env:
+      JAVA_TOOL_OPTIONS: "-Dfile.encoding=UTF-8"
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ macos-latest, windows-latest, ubuntu-latest ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: coursier/cache-action@v6
+      - uses: coursier/setup-action@v1
+        with:
+          jvm: graalvm-community:17
+          apps: sbt
+
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '17'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          native-image-job-reports: 'true'
+
+      - name: Build Native Executable
+        run: sbt 'show GraalVMNativeImage/packageBin'
+
+      - name: Test Run
+        working-directory: test-files
+        shell: bash
+        run: |
+          ../target/graalvm-native-image/fanhuaji-cli -v -i chs.ass -m Taiwan result.ass
+          diff --strip-trailing-cr -I 'Comment: Processed by 繁化姬' cht.ass result.ass
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: fanhuaji-cli-${{ matrix.os }}
+          path: target/graalvm-native-image/fanhuaji-cli
+
+      - name: Prepare Release
+        shell: bash
+        run: tar -C target/graalvm-native-image -czf fanhuaji-cli-${{ matrix.os }}.tar.gz fanhuaji-cli
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: fanhuaji-cli-${{ matrix.os }}.tar.gz
+          tag_name: ${{　github.ref_name　}}
+          make_latest: true
+          generate_release_notes: true
+          fail_on_unmatched_files: true

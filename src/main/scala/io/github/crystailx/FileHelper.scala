@@ -7,10 +7,12 @@ import scala.io.Source
 import scala.util.{Failure, Success, Try, Using}
 
 trait FileHelper {
-  def readWholeFile(file: File): Try[String] = Using(Source.fromFile(file))(_.getLines().mkString("\n"))
+  private val UTF8 = "UTF-8"
+
+  def readWholeFile(file: File): Try[String] = Using(Source.fromFile(file, UTF8))(_.getLines().mkString("\n"))
 
   def writeToFile(file: File, text: String): Try[Unit] =
-    Using(new OutputStreamWriter(new FileOutputStream(file, false), "UTF-8")) { writer =>
+    Using(new OutputStreamWriter(new FileOutputStream(file, false), UTF8)) { writer =>
       writer.write(text)
       writer.flush()
     }

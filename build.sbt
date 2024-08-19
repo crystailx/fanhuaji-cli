@@ -1,4 +1,4 @@
-ThisBuild / version      := "0.1.0"
+ThisBuild / version      := System.getenv().getOrDefault("VERSION", "0.1.0")
 ThisBuild / organization := "io.github.crystailx"
 ThisBuild / scalaVersion := "2.13.14"
 
